@@ -17,21 +17,24 @@ use App\Http\Controllers\CommentController;
 |
 */
 
-   // Auth publique
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
 
-   // Authentifié seulement
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/me', [AuthController::class, 'me']);
-        Route::post('/logout', [AuthController::class, 'logout']);
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
 
-        //     // API Resource routes
-        Route::post('/posts', [PostController::class, 'store']);
-        Route::apiResource('comments', CommentController::class);
-    });
+/// Auth publique
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-    // Accès public (ex : lire les articles)
-    Route::get('/posts', [PostController::class, 'index']);
+/// Authentifié seulement
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 
-   
+    // Routes protégées
+    Route::apiResource('posts', PostController::class);
+    Route::apiResource('comments', CommentController::class);
+});
+    
