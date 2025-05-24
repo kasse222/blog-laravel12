@@ -21,7 +21,16 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $post =Post::create([
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+            'user_id' => auth()->id(), // Nécessite l’utilisateur connecté
+        ]);
+
+            return response()->json([
+            'message' => 'Post created successfully.',
+            'data' => $post
+        ], 201);
     }
 
     /**
