@@ -3,6 +3,8 @@
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,12 +17,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+   // Auth publique
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctun')->group(function(){
-   Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/posts', [PostController::class, 'store']);
-});
-});
+   // Authentifié seulement
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+
+        // Gestion des posts
+        Route::post('/posts', [PostController::class, 'store']);
+    });
+
+    // Accès public (ex : lire les articles)
+    Route::get('/posts', [PostController::class, 'index']);
