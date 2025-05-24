@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,5 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Routes protégées
     Route::apiResource('posts', PostController::class);
     Route::apiResource('comments', CommentController::class);
+    Route::apiResource('tags', TagController::class);
+    
 });
     
