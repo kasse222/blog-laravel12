@@ -4,7 +4,7 @@ use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,3 +32,5 @@ use App\Http\Controllers\AuthController;
 
     // Accès public (ex : lire les articles)
     Route::get('/posts', [PostController::class, 'index']);
+
+    Route::apiResource('comments', CommentController::class)->middleware('auth:sanctum');

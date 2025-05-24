@@ -13,7 +13,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        return Comment::with(['user', 'post'])->latest()->get();
     }
 
     /**
@@ -21,7 +21,16 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
-        //
+        $comment = Comment::create([
+        'user_id' => auth()->id(),
+        'post_id' => $request->input('post_id'),
+        'body' => $request->input('body'),
+    ]);
+
+    return response()->json([
+        'message' => 'Commentaire ajouté',
+        'comment' => $comment->load('user')
+    ], 201);
     }
 
     /**
@@ -29,7 +38,7 @@ class CommentController extends Controller
      */
     public function show(Comment $comment)
     {
-        //
+        return response()->json($comment->load(['user', 'post']));
     }
 
     /**
@@ -37,7 +46,11 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        //
+        $comment->update($request->only('body'));
+        return response()->json([
+            'message' => 'Commentaire mis à jour',
+            'comment' => $comment
+    ]);
     }
 
     /**
@@ -45,6 +58,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
+        $comment->delete();
+        return response()->json(['message' => 'Commentaire supprimé']);
     }
 }
