@@ -46,18 +46,26 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
+        if ($comment->user_id !== auth()->id()) {
+            return response()->json(['error' => 'Non autorisé'], 403);
+        }
+
         $comment->update($request->only('body'));
         return response()->json([
             'message' => 'Commentaire mis à jour',
             'comment' => $comment
-    ]);
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+        public function destroy(Comment $comment)
     {
+        if ($comment->user_id !== auth()->id()) {
+            return response()->json(['error' => 'Non autorisé'], 403);
+        }
+
         $comment->delete();
         return response()->json(['message' => 'Commentaire supprimé']);
     }
