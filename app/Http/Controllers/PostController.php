@@ -2,58 +2,56 @@
 
 namespace App\Http\Controllers;
 
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // GET /api/posts
     public function index()
     {
-        //
+        return Post::with(['user', 'tags', 'comments'])->latest()->get();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // POST /api/posts
     public function store(StorePostRequest $request)
     {
-        $post =Post::create([
-            'title' => $request->input('title'),
-            'content' => $request->input('content'),
-            'user_id' => auth()->id(), // Nécessite l’utilisateur connecté
-        ]);
+        $post = Auth::user()->posts()->create($request->validated());
 
-            return response()->json([
-            'message' => 'Post created successfully.',
-            'data' => $post
+        if ($request->has('tags')) {
+            $post->tags()->attach($request->input('tags'));
+        }
+
+        return response()->json([
+            'message' => 'Article créé avec succès',
+            'post' => $post->load('tags')
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Post $post)
+    // GET /api/posts/{id}
+    public function show($id)
     {
-        //
+        $post = Post::with(['user', 'comments', 'tags'])->findOrFail($id);
+        return response()->json($post);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePostRequest $request, Post $post)
+    // PUT/PATCH /api/posts/{id}
+    public function update(Request $request, $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $post->update($request->only(['title', 'content']));
+        return response()->json($post);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Post $post)
+    // DELETE /api/posts/{id}
+    public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $post->delete();
+        return response()->json(['message' => 'Supprimé']);
     }
 }
