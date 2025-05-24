@@ -26,11 +26,12 @@ use App\Http\Controllers\CommentController;
         Route::get('/me', [AuthController::class, 'me']);
         Route::post('/logout', [AuthController::class, 'logout']);
 
-        // Gestion des posts
+        //     // API Resource routes
         Route::post('/posts', [PostController::class, 'store']);
+        Route::apiResource('comments', CommentController::class);
     });
 
     // Accès public (ex : lire les articles)
     Route::get('/posts', [PostController::class, 'index']);
 
-    Route::apiResource('comments', CommentController::class)->middleware('auth:sanctum');
+   
