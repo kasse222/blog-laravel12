@@ -1,92 +1,149 @@
-# 📰 Blogue API Laravel 12 avec SQLite
 
-## 🚀 Description
-Une API RESTful développée avec Laravel 12 pour gérer des articles, commentaires et tags, avec authentification via Sanctum. Le projet utilise **SQLite** pour simplifier l’environnement de développement local.
+# 📰 Blog API – Laravel 12 + Sanctum + SQLite
 
----
-
-## 🛠️ Fonctionnalités
-
-- Authentification API (register, login, logout, me)
-- CRUD complet :
-  - Articles (Posts)
-  - Commentaires
-  - Tags
-- Relations Eloquent :
-  - `User → Post` (1-n)
-  - `Post → Comment` (1-n)
-  - `Post ↔ Tag` (n-n)
-- Validation des requêtes via `FormRequest`
-- Testé avec Postman
+Une API RESTful professionnelle développée avec Laravel 12.  
+Ce projet propose la gestion complète d’un blog avec articles, commentaires, tags et authentification sécurisée via Sanctum.
 
 ---
 
-## 📦 Tech Stack
+## ✅ Fonctionnalités
 
-- **Laravel 12**
-- **Sanctum**
-- **SQLite**
-- **Postman (tests manuels)**
-- **Pest (prévu pour les tests automatisés)**
-
----
-
-## 🔐 Authentification Sanctum
-
-```http
-POST /api/register
-POST /api/login
-GET /api/me
-POST /api/logout
-```
+- 🔐 Authentification via Laravel Sanctum
+- 📝 Gestion des articles (CRUD)
+- 💬 Gestion des commentaires
+- 🏷️ Système de tags (relation N-N)
+- 🧪 Tests automatisés avec PestPHP
+- 🧩 Architecture MVC claire et découplée
+- 🗄️ Base de données SQLite (mode local)
 
 ---
 
-## 📂 Endpoints principaux
-
-### 📄 Posts
-
-```http
-GET /api/posts
-POST /api/posts
-GET /api/posts/{id}
-PUT /api/posts/{id}
-DELETE /api/posts/{id}
-```
-
-### 💬 Comments
-
-```http
-GET /api/comments
-POST /api/comments
-```
-
-### 🏷️ Tags
-
-```http
-GET /api/tags
-POST /api/tags
-```
-
----
-
-## 📁 Installation locale
+## 🚀 Installation
 
 ```bash
-git clone git@github.com:ton-username/nom-repo.git
-cd nom-repo
+git clone git@github.com:<ton-utilisateur>/blog-laravel12.git
+cd blog-laravel12
 composer install
 cp .env.example .env
-touch database/database.sqlite
 php artisan key:generate
-php artisan migrate
+touch database/database.sqlite
+php artisan migrate --seed
 php artisan serve
 ```
 
 ---
 
-## ✍️ Auteur
+## 🔐 Authentification API (Sanctum)
 
-**Lamine Kasse**  
-📧 kasselamine130@gmail.com  
-🌍 Pop!_OS + Laravel 12 + GitHub + Postman
+### 📥 Inscription
+
+```http
+POST /api/register
+```
+
+| Champ       | Type     |
+|-------------|----------|
+| name        | string   |
+| email       | string   |
+| password    | string   |
+| password_confirmation | string |
+
+---
+
+### 🔐 Connexion
+
+```http
+POST /api/login
+```
+
+| Champ     | Type   |
+|-----------|--------|
+| email     | string |
+| password  | string |
+
+Retourne un token :  
+```
+Authorization: Bearer ton_token
+```
+
+---
+
+## 📂 Routes API principales
+
+### 📄 Posts
+
+| Méthode | URI            | Auth | Description                  |
+|---------|----------------|------|------------------------------|
+| GET     | /api/posts     | ✅   | Liste des articles           |
+| POST    | /api/posts     | ✅   | Créer un article             |
+| GET     | /api/posts/{id}| ✅   | Détail d’un article          |
+| PUT     | /api/posts/{id}| ✅   | Modifier un article          |
+| DELETE  | /api/posts/{id}| ✅   | Supprimer un article         |
+
+---
+
+### 💬 Comments
+
+| Méthode | URI              | Auth | Description                      |
+|---------|------------------|------|----------------------------------|
+| GET     | /api/comments     | ✅   | Liste des commentaires           |
+| POST    | /api/comments     | ✅   | Créer un commentaire             |
+
+---
+
+### 🏷️ Tags
+
+| Méthode | URI         | Auth | Description                 |
+|---------|-------------|------|-----------------------------|
+| GET     | /api/tags   | ✅   | Lister les tags             |
+| POST    | /api/tags   | ✅   | Créer un nouveau tag        |
+
+---
+
+## 📊 Tests automatisés (Pest)
+
+Tous les tests ont été validés :
+
+| Catégorie   | Testé            | ✅ |
+|-------------|------------------|----|
+| Auth        | register, login  | ✔️ |
+| Posts       | index, store     | ✔️ |
+| Comments    | index, store     | ✔️ |
+| Tags        | index, store     | ✔️ |
+
+```bash
+./vendor/bin/pest
+```
+
+Résultat :
+```
+Tests:    10 passed (41 assertions)
+Duration: ~0.25s
+```
+
+---
+
+## 🧰 Technologies utilisées
+
+- Laravel 12
+- Sanctum (API Token)
+- SQLite (dev)
+- PestPHP (tests)
+- Postman (debug API)
+
+---
+
+## 📄 À venir
+
+- Dockerisation (`php + nginx + mysql`)
+- GitHub Actions (CI/CD pipeline)
+- Documentation OpenAPI (via Laravel Scribe)
+
+---
+
+## 👨‍💻 Auteur
+
+**Lamine Kasse** – Projet personnel de reconversion back-end (Laravel/DevOps)  
+📍 Objectif : intégration professionnelle 🇫🇷/🇨🇭
+
+---
