@@ -14,5 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return response()->json([
+        'message' => 'Bienvenue sur l’API Blog Laravel 12 🚀',
+        'status' => 'OK'
+    ]);
 });
