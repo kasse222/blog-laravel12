@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTagRequest;
+use App\Http\Resources\TagResource;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
@@ -12,18 +14,16 @@ class TagController extends Controller
         return Tag::with('posts')->latest()->get();
     }
 
-    public function store(Request $request)
+    public function store(StoreTagRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|unique:tags,name',
-        ]);
+        $tag = Tag::create($request->validated());
 
-        $tag = Tag::create([
-            'name' => $request->name,
-        ]);
-
-        return response()->json(['message' => 'Tag créé', 'tag' => $tag], 201);
+        return response()->json([
+            'message' => 'Tag créé avec succès',
+            'data' => new TagResource($tag),
+        ], 201);
     }
+
 
     public function show(Tag $tag)
     {

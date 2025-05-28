@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 
 class PostController extends Controller
@@ -14,7 +15,8 @@ class PostController extends Controller
     // GET /api/posts
     public function index()
     {
-        return Post::with(['user', 'tags', 'comments'])->latest()->get();
+        $posts = Post::with(['user', 'tags'])->latest()->paginate(10);
+        return PostResource::collection($posts);
     }
 
     // POST /api/posts
@@ -27,9 +29,9 @@ class PostController extends Controller
         }
 
         return response()->json([
-            'message' => 'Article créé avec succès',
-            'post' => $post->load('tags')
-        ], 201);
+        'message' => 'Article créé avec succès',
+        'data' => new PostResource($post->load(['tags', 'user']))
+    ], 201);
     }
 
     // GET /api/posts/{id}
@@ -40,11 +42,19 @@ class PostController extends Controller
     }
 
     // PUT/PATCH /api/posts/{id}
-    public function update(Request $request, $id)
+    public function update(UpdatePostRequest $request, $id)
     {
         $post = Post::findOrFail($id);
         $post->update($request->only(['title', 'content']));
-        return response()->json($post);
+
+        if ($request->has('tags')) {
+            $post->tags()->sync($request->input('tags'));
+        }
+
+        return response()->json([
+            'message' => 'Article mis à jour avec succès',
+            'data' => new PostResource($post->load(['tags', 'user'])),
+        ]);
     }
 
     // DELETE /api/posts/{id}
@@ -52,6 +62,9 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
         $post->delete();
-        return response()->json(['message' => 'Supprimé']);
+
+        return response()->json([
+            'message' => 'Article supprimé avec succès'
+        ], 200);
     }
 }
