@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTagRequest;
+use App\Http\Requests\UpdateTagRequest;
 use App\Http\Resources\TagResource;
 use App\Models\Tag;
 use Illuminate\Http\Request;
@@ -27,24 +28,23 @@ class TagController extends Controller
 
     public function show(Tag $tag)
     {
-        return response()->json($tag->load('posts'));
+        return new TagResource($tag->load('posts'));
     }
 
-    public function update(Request $request, Tag $tag)
+    public function update(UpdateTagRequest $request, Tag $tag)
     {
-        $request->validate([
-            'name' => 'required|string|unique:tags,name,' . $tag->id,
+        $tag->update($request->validated());
+
+        return response()->json([
+            'message' => 'Tag mis à jour',
+            'data' => new TagResource($tag)
         ]);
-
-        $tag->update(['name' => $request->name]);
-
-        return response()->json(['message' => 'Tag mis à jour', 'tag' => $tag]);
     }
 
     public function destroy(Tag $tag)
     {
         $tag->delete();
 
-        return response()->json(['message' => 'Tag supprimé']);
+        return response()->json(['message' => 'Tag supprimé avec succès.']);
     }
 }

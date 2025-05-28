@@ -15,5 +15,17 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
+
+        // tests/Feature/ExampleTest.php
+        it('affiche le message de bienvenue', function () {
+            $response = $this->getJson('/');
+
+            $response->assertOk()
+                    ->assertJson([
+                        'message' => 'Bienvenue sur l’API Blog Laravel 12 🚀',
+                        'status' => 'OK'
+                    ]);
+        });
+
     }
 }
