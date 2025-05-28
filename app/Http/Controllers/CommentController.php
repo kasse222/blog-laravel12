@@ -4,45 +4,51 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 
 class CommentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * GET /api/comments
+     * Liste les commentaires avec relations.
      */
     public function index()
     {
-        return Comment::with(['user', 'post'])->latest()->get();
+        $comments = Comment::with(['user', 'post'])->latest()->get();
+        return CommentResource::collection($comments);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * POST /api/comments
+     * Ajoute un commentaire.
      */
     public function store(StoreCommentRequest $request)
     {
         $comment = Comment::create([
-        'user_id' => auth()->id(),
-        'post_id' => $request->input('post_id'),
-        'body' => $request->input('body'),
-    ]);
+            'user_id' => auth()->id(),
+            'post_id' => $request->post_id,
+            'body' => $request->body,
+        ]);
 
-    return response()->json([
-        'message' => 'Commentaire ajouté',
-        'comment' => $comment->load('user')
-    ], 201);
+        return response()->json([
+            'message' => 'Commentaire ajouté avec succès.',
+            'data' => new CommentResource($comment->load('user')),
+        ], 201);
     }
 
     /**
-     * Display the specified resource.
+     * GET /api/comments/{comment}
+     * Affiche un commentaire précis.
      */
     public function show(Comment $comment)
     {
-        return response()->json($comment->load(['user', 'post']));
+        return new CommentResource($comment->load(['user', 'post']));
     }
 
     /**
-     * Update the specified resource in storage.
+     * PUT/PATCH /api/comments/{comment}
+     * Met à jour un commentaire (si propriétaire).
      */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
@@ -50,23 +56,26 @@ class CommentController extends Controller
             return response()->json(['error' => 'Non autorisé'], 403);
         }
 
-        $comment->update($request->only('body'));
+        $comment->update($request->validated());
+
         return response()->json([
-            'message' => 'Commentaire mis à jour',
-            'comment' => $comment
+            'message' => 'Commentaire mis à jour.',
+            'data' => new CommentResource($comment),
         ]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * DELETE /api/comments/{comment}
+     * Supprime un commentaire (si propriétaire).
      */
-        public function destroy(Comment $comment)
+    public function destroy(Comment $comment)
     {
         if ($comment->user_id !== auth()->id()) {
             return response()->json(['error' => 'Non autorisé'], 403);
         }
 
         $comment->delete();
-        return response()->json(['message' => 'Commentaire supprimé']);
+
+        return response()->json(['message' => 'Commentaire supprimé.']);
     }
 }
