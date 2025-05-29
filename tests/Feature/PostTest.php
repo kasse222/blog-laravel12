@@ -4,11 +4,13 @@ use function Pest\Laravel\actingAs;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 
 uses(RefreshDatabase::class);
 
 it('affiche la liste des posts pour un utilisateur connecté', function () {
     $user = User::factory()->create();
+    Sanctum::actingAs($user);
     Post::factory()->count(3)->create(['user_id' => $user->id]);
 
     $response = $this->actingAs($user)->getJson('/api/posts');
@@ -20,6 +22,7 @@ it('affiche la liste des posts pour un utilisateur connecté', function () {
 
 it('crée un post pour un utilisateur authentifié', function () {
     $user = User::factory()->create();
+    Sanctum::actingAs($user);
 
     $payload = [
         'title' => 'Nouveau Post',
