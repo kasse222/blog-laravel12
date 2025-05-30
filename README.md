@@ -140,6 +140,16 @@ Duration: ~0.25s
 - Documentation OpenAPI (via Laravel Scribe)
 
 ---
+## 🔁 Restauration du projet
+
+🧾 Détail du commit :
+
+- 🔧 Recréation du dossier `vendor` via `composer install`
+- 🐋 Problèmes Docker résolus : `docker-compose` correctement installé et utilisé
+- 🗂️ Base de données `SQLite` configurée dans `.env` et `database.sqlite` créé
+- 🧱 Migrations Laravel exécutées avec succès (`php artisan migrate`)
+- 🌐 API accessible depuis `localhost` dans le container
+
 
 ## 👨‍💻 Auteur
 

@@ -32,5 +32,6 @@ it('crée un post pour un utilisateur authentifié', function () {
     $response = $this->actingAs($user)->postJson('/api/posts', $payload);
 
     $response->assertStatus(201)
-             ->assertJsonPath('post.title', 'Nouveau Post');
+             ->assertJsonPath('data.title', 'Nouveau Post');
+
 });

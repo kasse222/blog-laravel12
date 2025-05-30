@@ -18,6 +18,7 @@ class TagResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'created_at' => $this->created_at->diffForHumans(),
+            'updated_at' => $this->updated_at?->toISOString(),
             'posts_count' => $this->posts()->count(),
     ];
     }

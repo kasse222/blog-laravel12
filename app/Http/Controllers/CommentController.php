@@ -6,6 +6,8 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -16,26 +18,35 @@ class CommentController extends Controller
     public function index()
     {
         $comments = Comment::with(['user', 'post'])->latest()->get();
-        return CommentResource::collection($comments);
+
+        return response()->json([
+            'message' => 'Liste des commentaires',
+            'comments' => CommentResource::collection($comments)
+        ]);
     }
 
     /**
      * POST /api/comments
      * Ajoute un commentaire.
      */
-    public function store(StoreCommentRequest $request)
+    public function store(Request $request)
     {
-        $comment = Comment::create([
-            'user_id' => auth()->id(),
-            'post_id' => $request->post_id,
+        $request->validate([
+            'body' => 'required|string|max:255',
+            'post_id' => 'required|exists:posts,id',
+        ]);
+
+        $comment = Auth::user()->comments()->create([
             'body' => $request->body,
+            'post_id' => $request->post_id,
         ]);
 
         return response()->json([
-            'message' => 'Commentaire ajouté avec succès.',
-            'data' => new CommentResource($comment->load('user')),
+            'message' => 'Commentaire créé avec succès',
+            'comment' => new CommentResource($comment->load(['user']))
         ], 201);
     }
+
 
     /**
      * GET /api/comments/{comment}

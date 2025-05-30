@@ -12,17 +12,21 @@ class TagController extends Controller
 {
     public function index()
     {
-        return Tag::with('posts')->latest()->get();
+        return response()->json([
+        'message' => 'Liste des tags',
+        'data' => TagResource::collection(Tag::withCount('posts')->latest()->get())
+    ]);
     }
 
     public function store(StoreTagRequest $request)
     {
-        $tag = Tag::create($request->validated());
+        // Autoriser explicitement l'action via la TagPolicy
+        $this->authorize('create', Tag::class);
 
-        return response()->json([
-            'message' => 'Tag créé avec succès',
-            'data' => new TagResource($tag),
-        ], 201);
+        // Si l'exécution continue ici, l'utilisateur est autorisé.
+        $validatedData = $request->validated();
+        $tag = Tag::create($validatedData);
+        return response()->json($tag, 201);
     }
 
 
