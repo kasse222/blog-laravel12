@@ -11,11 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      sqlite:
-        image: nouchka/sqlite3:latest
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: laravel
         ports:
           - 3306:3306
-        options: --health-cmd="sqlite3 --version" --health-interval=10s --health-timeout=5s --health-retries=5
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - uses: actions/checkout@v3
@@ -24,14 +31,26 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, bcmath, sqlite
+          extensions: mbstring, bcmath, pdo_mysql
           coverage: none
+
+      - name: Wait for MySQL to be ready
+        run: sleep 15
 
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist
 
-      - name: Copy .env
+      - name: Prepare .env
         run: cp .env.example .env
+
+      - name: Configure DB credentials
+        run: |
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env
+          sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' .env
+          sed -i 's/DB_PORT=.*/DB_PORT=3306/' .env
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=blog_laravel/' .env
+          sed -i 's/DB_USERNAME=.*/DB_USERNAME=root/' .env
+          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=root/' .env
 
       - name: Generate application key
         run: php artisan key:generate

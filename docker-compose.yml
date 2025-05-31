@@ -10,9 +10,18 @@ services:
     networks:
       - laravel
     depends_on:
-      - webserver
+      - mysql
     command: >
         sh -c "chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache && php-fpm"
+  mysql:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db-data:/var/lib/mysql
 
   webserver:
     image: nginx:alpine
@@ -28,3 +37,6 @@ services:
 networks:
   laravel:
     driver: bridge
+
+volumes:
+  db-data: 
