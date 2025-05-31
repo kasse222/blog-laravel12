@@ -1,0 +1,44 @@
+name: Laravel CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧾 Cloner le dépôt
+        uses: actions/checkout@v3
+
+      - name: 🧰 Installer PHP et les extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, bcmath, xml, ctype, fileinfo, sqlite
+          coverage: none
+
+      - name: 📦 Installer les dépendances Composer
+        run: composer install --no-progress --prefer-dist --no-interaction
+
+      - name: ⚙️ Copier le fichier .env
+        run: cp .env.example .env
+
+      - name: 🔑 Générer la clé d'application
+        run: php artisan key:generate
+
+      - name: 📁 Créer la base de données SQLite
+        run: |
+          mkdir -p database
+          touch database/database.sqlite
+
+      - name: 🧪 Lancer les tests avec Pest
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+        run: |
+          php artisan migrate --seed --force
+          ./vendor/bin/pest
