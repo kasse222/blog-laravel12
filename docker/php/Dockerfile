@@ -1,18 +1,32 @@
-FROM php:8.2-fpm
+FROM php:8.2-fpm-alpine
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
+# Installation des dépendances système
+RUN apk add --no-cache \
+    bash \
     zip \
     unzip \
+    curl \
+    git \
+    libpng \
     libpng-dev \
-    libonig-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
+    freetype-dev \
+    oniguruma-dev \
+    icu-dev \
     libxml2-dev \
-    libzip-dev \
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath
+    sqlite \
+    sqlite-dev \
+    && docker-php-ext-install pdo pdo_mysql pdo_sqlite mbstring gd intl xml
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Installation de Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
+# Définition du répertoire de travail
+WORKDIR /var/www/html
+
+# Copie des fichiers de l'application
+COPY . .
+
+# Attribution des droits
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
