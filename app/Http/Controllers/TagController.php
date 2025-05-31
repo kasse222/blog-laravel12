@@ -20,14 +20,17 @@ class TagController extends Controller
 
     public function store(StoreTagRequest $request)
     {
-        // Autoriser explicitement l'action via la TagPolicy
         $this->authorize('create', Tag::class);
 
-        // Si l'exécution continue ici, l'utilisateur est autorisé.
         $validatedData = $request->validated();
         $tag = Tag::create($validatedData);
-        return response()->json($tag, 201);
+
+        return response()->json([
+            'message' => 'Tag créé avec succès',
+            'data' => new TagResource($tag),
+        ], 201);
     }
+
 
 
     public function show(Tag $tag)

@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-/*it('permet à un utilisateur authentifié de créer un tag', function () {
+it('permet à un utilisateur authentifié de créer un tag', function () {
     $user = User::factory()->create();
     Sanctum::actingAs($user);
 
@@ -17,7 +17,7 @@ uses(RefreshDatabase::class);
     $response = postJson('/api/tags', [
         'name' => $name,
     ]);
-dd($response->json());
+
     $response->assertStatus(201)
          ->assertJsonStructure([
              'message',
@@ -29,11 +29,11 @@ dd($response->json());
                  'posts_count',
              ]
          ]);
-
+         
     expect(Tag::where('name', $name)->exists())->toBeTrue();
     
 });
-*/
+
 it('liste tous les tags', function () {
     $user = User::factory()->create();
     Sanctum::actingAs($user); // Authentification Sanctum
