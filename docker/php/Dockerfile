@@ -41,6 +41,8 @@ WORKDIR /var/www/html
 # Copier les fichiers du projet (exclure `.env`)
 COPY . /var/www/html
 
+# Installer les dépendances PHP du projet Laravel
+RUN composer install --no-dev --optimize-autoloader
 # Permissions des dossiers Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
     chmod -R ug+rwX /var/www/html/storage /var/www/html/bootstrap/cache
