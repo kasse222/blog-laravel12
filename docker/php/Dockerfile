@@ -7,6 +7,7 @@ RUN apk add --no-cache \
     unzip \
     curl \
     git \
+    mysql-client \
     libpng \
     libpng-dev \
     libjpeg-turbo-dev \
@@ -21,32 +22,30 @@ RUN apk add --no-cache \
         --with-freetype \
         --with-jpeg \
         --with-webp \
-    && docker-php-ext-install \
-        pdo \
+    && docker-php-ext-install -j$(nproc) \
         pdo_mysql \
         pdo_sqlite \
         mbstring \
         gd \
         intl \
         xml \
+        dom \
     && rm -rf /var/cache/apk/*
 
-# Installer Composer (depuis l'image officielle)
+# Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Copier les fichiers du projet (le minimum en prod)
-COPY . .
+# Copier les fichiers du projet (exclure `.env`)
+COPY . /var/www/html
 
-# Donner les bons droits d’accès
-RUN chown -R www-data:www-data \
-    /var/www/html/storage \
-    /var/www/html/bootstrap/cache
+# Permissions des dossiers Laravel
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
+    chmod -R ug+rwX /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Permettre au conteneur de démarrer avec PHP-FPM
+# Entry point
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-

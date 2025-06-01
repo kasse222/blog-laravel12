@@ -1,14 +1,15 @@
-version: '3.8'
+version: "3.8"
 
 services:
   app:
     build:
       context: .
-      dockerfile: docker/php/Dockerfile
+      dockerfile: Dockerfile
     image: laravel-app
     restart: unless-stopped
     volumes:
       - .:/var/www/html
+      - ./env.prod:/var/www/html/.env
     expose:
       - 9000
     environment:
@@ -19,12 +20,15 @@ services:
       - DB_DATABASE=laravel
       - DB_USERNAME=root
       - DB_PASSWORD=root
+    depends_on:
+      - db
     networks:
       - laravel
 
   db:
     image: mysql:8
     container_name: blog-mysql
+    restart: unless-stopped
     environment:
       MYSQL_DATABASE: laravel
       MYSQL_ROOT_PASSWORD: root

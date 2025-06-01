@@ -1,18 +1,13 @@
-#!/bin/bash
-
-set -e
-
-echo "⏳ Attente de la base de données MySQL ($DB_HOST)..."
-
-# Boucle jusqu'à ce que MySQL réponde
-until mysql -h"$DB_HOST" -u"$DB_USERNAME" -p"$DB_PASSWORD" -e "SELECT 1;" > /dev/null 2>&1; do
-  echo "⏳ ...en attente de MySQL"
-  sleep 2
+#!/bin/sh
+echo "📡 Attente de MySQL sur $DB_HOST:$DB_PORT..."
+until nc -z -v -w30 "$DB_HOST" "$DB_PORT"; do
+  echo "⏳ MySQL pas prêt... on attend"
+  sleep 1
 done
+echo "✅ MySQL prêt !"
 
-echo "✅ MySQL est prêt. Lancement des migrations et seeders..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
-php artisan migrate --seed --force
-
-echo "🚀 Lancement de PHP-FPM..."
 exec php-fpm
