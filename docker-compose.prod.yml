@@ -9,11 +9,22 @@ services:
     restart: unless-stopped
     volumes:
       - .:/var/www/html
+    expose:
+      - 9000
+    environment:
+      - APP_ENV=production
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=laravel
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
     networks:
       - laravel
 
   db:
     image: mysql:8
+    container_name: blog-mysql
     environment:
       MYSQL_DATABASE: laravel
       MYSQL_ROOT_PASSWORD: root
