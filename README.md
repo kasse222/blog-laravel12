@@ -1,7 +1,8 @@
 # 📰 API de blog – Laravel 12 + Sanctum + MySQL (Docker)
+
 ![Laravel Tests](https://github.com/kasse222/blog-laravel12/actions/workflows/laravel.yml/badge.svg)
 
-Une API RESTful professionnelle développée avec Laravel 12.
+Une API RESTful professionnelle développée avec Laravel 12.  
 Ce projet propose la gestion complète d'un blog avec articles, commentaires, tags et une authentification sécurisée via Sanctum.
 
 ---
@@ -22,7 +23,7 @@ Ce projet propose la gestion complète d'un blog avec articles, commentaires, ta
 ## 🚀 Installation (Docker)
 
 ```bash
-git clone git@github.com:<ton-utilisateur>/blog-laravel12.git
+git clone https://github.com/kasse222/blog-laravel12.git
 cd blog-laravel12
 cp .env.example .env
 
@@ -31,20 +32,20 @@ docker compose -f docker-compose.prod.yml up -d --build
 
 # Lancer les migrations et seeders
 docker compose -f docker-compose.prod.yml exec app php artisan migrate:fresh --seed
-```
 
----
+⚙️ Utilisation rapide sans Docker
 
-## 📂 Principales API Routes
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate:fresh --seed
+php artisan serve
 
-### 🔐 API d'authentification (Sanctum)
+📂 Principales API Routes
+🔐 API d'authentification (Sanctum)
+📥 Inscription
 
-#### 📥 Inscription
-
-```
 POST /api/register
-```
-
 | Champ                        | Type   |
 | ---------------------------- | ------ |
 | nom                          | chaîne |
@@ -52,25 +53,16 @@ POST /api/register
 | mot\_de\_passe               | chaîne |
 | confirmation\_mot\_de\_passe | chaîne |
 
-#### 🔐 Connexion
-
-```
+🔐 Connexion
 POST /api/login
-```
-
 | Champ          | Type   |
 | -------------- | ------ |
 | email          | chaîne |
 | mot\_de\_passe | chaîne |
-
 ✅ Retourne un token :
-
-```
 Authorization: Bearer <ton_token>
-```
 
-### 📄 Articles
-
+📄 Articles
 | Méthode | URI             | Authentification | Description          |
 | ------- | --------------- | ---------------- | -------------------- |
 | GET     | /api/posts      | ✅                | Liste des articles   |
@@ -79,30 +71,21 @@ Authorization: Bearer <ton_token>
 | PUT     | /api/posts/{id} | ✅                | Modifier un article  |
 | DELETE  | /api/posts/{id} | ✅                | Supprimer un article |
 
-### 💬 Commentaires
-
+💬 Commentaires
 | Méthode | URI               | Authentification | Description            |
 | ------- | ----------------- | ---------------- | ---------------------- |
 | GET     | /api/commentaires | ✅                | Liste des commentaires |
 | POST    | /api/commentaires | ✅                | Créer un commentaire   |
 
-### 🏷️ Tags
-
+🏷️ Tags
 | Méthode | URI       | Authentification | Description     |
 | ------- | --------- | ---------------- | --------------- |
 | GET     | /api/tags | ✅                | Lister les tags |
 | POST    | /api/tags | ✅                | Créer un tag    |
 
----
-
-## 🧪 Tests automatisés (PestPHP)
-
-```bash
+🧪 Tests automatisés (PestPHP)
 docker compose -f docker-compose.prod.yml exec app ./vendor/bin/pest
-```
-
-**Tous les tests sont passés ✅**
-
+Tous les tests sont passés ✅
 | Catégorie        | Tests réalisés                        |
 | ---------------- | ------------------------------------- |
 | Authentification | inscription, connexion                |
@@ -110,50 +93,42 @@ docker compose -f docker-compose.prod.yml exec app ./vendor/bin/pest
 | Commentaires     | liste, création                       |
 | Tags             | liste, création, édition, suppression |
 
----
-
-## 🐋 Dockérisation complète
-
+🐋 Dockérisation complète
 Ce projet est entièrement dockerisé avec :
 
-* `docker-compose.prod.yml` : coordination des services
-* `docker/php/Dockerfile` : image PHP Laravel 12 optimisée
-* `docker/nginx/default.conf` : configuration NGINX
-* `.env` adapté à **MySQL via Docker**
+*docker-compose.prod.yml : coordination des services
 
-### Services Docker :
+*Dockerfile : image PHP Laravel 12 optimisée (multi-stage)
 
+*default.conf : configuration NGINX
+
+*.env adapté à MySQL via Docker
+
+
+Services Docker :
 | Service | Rôle                       | Port exposé |
 | ------- | -------------------------- | ----------- |
 | nginx   | Serveur HTTP reverse-proxy | 8000        |
 | app     | Laravel + PHP 8.2 FPM      | interne     |
 | db      | Base de données MySQL      | 3306        |
 
----
+🧰 Technologies utilisées
+Laravel 12
 
-## 📄 À venir
+Sanctum (authentification API)
 
-* ✅ CI/CD avec GitHub Actions (tests + déploiement)
-* ✅ Documentation API via Laravel Scribe
-* 🔐 Rotation des tokens et politiques d’accès avancées
-* ☁️ Déploiement distant (VPS, Render, etc.)
+MySQL 8 (base de données Docker)
 
----
+NGINX (serveur HTTP Docker)
 
-## 🧰 Technologies utilisées
+Docker + Docker Compose
 
-* Laravel 12
-* Sanctum (authentification API)
-* MySQL 8 (base de données Docker)
-* NGINX (serveur HTTP Docker)
-* Docker + Docker Compose
-* PestPHP (tests unitaires et fonctionnels)
-* Postman (débogage API)
+PestPHP (tests unitaires et fonctionnels)
 
----
+GitHub Actions (CI/CD)
 
-## 👨‍💻 Auteur
+Postman (débogage API)
 
-**Lamine Kasse** – Projet personnel de reconversion back-end (Laravel/DevOps)
-🎯 Objectif : intégration professionnelle 🇫🇷/🇨🇭
-
+👨‍💻 Auteur
+Lamine Kasse – Projet personnel de reconversion back-end (Laravel/DevOps)
+🎯 Objectif : intégration professionnelle 🇫🇷 / 🇨🇭

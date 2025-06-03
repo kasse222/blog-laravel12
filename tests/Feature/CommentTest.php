@@ -18,10 +18,10 @@ it('permet à un utilisateur authentifié de créer un commentaire', function ()
     ]);
 
     $response->assertStatus(201)
-             ->assertJsonStructure([
-                 'message',
-                 'comment' => ['id', 'body', 'user', 'post_id', 'created_at']
-             ]);
+        ->assertJsonStructure([
+            'message',
+            'comment' => ['id', 'body', 'user', 'post_id', 'created_at']
+        ]);
 
     expect(Comment::where('body', 'Ceci est un commentaire.')->exists())->toBeTrue();
 });
@@ -40,10 +40,10 @@ it('liste les commentaires avec leurs relations', function () {
     $response = getJson('/api/comments');
 
     $response->assertStatus(200)
-             ->assertJsonStructure([
-                 'message',
-                 'comments' => [
-                     ['id', 'body', 'user', 'post_id', 'created_at']
-                 ]
-             ]);
+        ->assertJsonStructure([
+            'message',
+            'comments' => [
+                ['id', 'body', 'user', 'post_id', 'created_at']
+            ]
+        ]);
 });
