@@ -29,16 +29,16 @@ class PostController extends Controller
         }
 
         return response()->json([
-        'message' => 'Article créé avec succès',
-        'data' => new PostResource($post->load(['tags', 'user']))
-    ], 201);
+            'message' => 'Article créé avec succès',
+            'data' => new PostResource($post->load(['tags', 'user']))
+        ], 201);
     }
 
     // GET /api/posts/{id}
     public function show($id)
     {
         $post = Post::with(['user', 'comments', 'tags'])->findOrFail($id);
-        return response()->json($post);
+        return new PostResource($post);
     }
 
     // PUT/PATCH /api/posts/{id}
@@ -58,9 +58,17 @@ class PostController extends Controller
     }
 
     // DELETE /api/posts/{id}
+    // DELETE /api/posts/{id}
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
+
+        if ($post->user_id !== auth()->id()) {
+            return response()->json([
+                'message' => 'Vous n\'êtes pas autorisé à supprimer ce post.'
+            ], 403);
+        }
+
         $post->delete();
 
         return response()->json([
