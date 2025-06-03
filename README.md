@@ -1,4 +1,5 @@
 # 📰 API de blog – Laravel 12 + Sanctum + MySQL (Docker)
+![Laravel Tests](https://github.com/kasse222/blog-laravel12/actions/workflows/laravel.yml/badge.svg)
 
 Une API RESTful professionnelle développée avec Laravel 12.
 Ce projet propose la gestion complète d'un blog avec articles, commentaires, tags et une authentification sécurisée via Sanctum.
