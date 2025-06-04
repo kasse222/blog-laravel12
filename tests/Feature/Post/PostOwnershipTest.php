@@ -23,5 +23,42 @@ test('un utilisateur ne peut pas supprimer le post d’un autre', function () {
 
     $this->actingAs($other, 'sanctum')
         ->deleteJson("/api/posts/{$post->id}")
-        ->assertStatus(403); // Forbidden
+        ->assertStatus(403); // Interdiction de SUPPRIMER
+});
+
+it('rejette la modification d’un post par un autre utilisateur', function () {
+    $owner = \App\Models\User::factory()->create();
+    $other = \App\Models\User::factory()->create();
+    $post = \App\Models\Post::factory()->for($owner)->create();
+
+    $payload = [
+        'title' => 'Tentative de modif',
+        'content' => 'Contenu modifié',
+    ];
+
+    $this->actingAs($other, 'sanctum')
+        ->putJson("/api/posts/{$post->id}", $payload)
+        ->assertStatus(403); // Interdiction de MODIFIER
+});
+
+test('un utilisateur ne peut pas modifier le post d’un autre', function () {
+    $owner = \App\Models\User::factory()->create();
+    $other = \App\Models\User::factory()->create();
+
+    $post = \App\Models\Post::factory()->for($owner)->create([
+        'title' => 'Titre original',
+        'content' => 'Contenu original',
+    ]);
+
+    $payload = [
+        'title' => 'Titre modifié',
+        'content' => 'Contenu modifié',
+    ];
+
+    $this->actingAs($other, 'sanctum')
+        ->putJson("/api/posts/{$post->id}", $payload)
+        ->assertStatus(403) // Forbidden
+        ->assertJson([
+            'message' => 'This action is unauthorized.'
+        ]);
 });

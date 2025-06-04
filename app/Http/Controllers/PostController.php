@@ -42,20 +42,33 @@ class PostController extends Controller
     }
 
     // PUT/PATCH /api/posts/{id}
+    // PUT/PATCH /api/posts/{id}
     public function update(UpdatePostRequest $request, $id)
     {
         $post = Post::findOrFail($id);
+
+        // 🔐 Vérifie si l'utilisateur connecté est bien le propriétaire
+        if ($post->user_id !== auth()->id()) {
+            return response()->json([
+                'message' => 'Vous n\'êtes pas autorisé à modifier ce post.'
+            ], 403);
+        }
+
+        // 🛠 Mise à jour du contenu
         $post->update($request->only(['title', 'content']));
 
+        // 🔄 Mise à jour des tags si fournis
         if ($request->has('tags')) {
             $post->tags()->sync($request->input('tags'));
         }
 
+        // ✅ Réponse JSON
         return response()->json([
             'message' => 'Article mis à jour avec succès',
             'data' => new PostResource($post->load(['tags', 'user'])),
         ]);
     }
+
 
     // DELETE /api/posts/{id}
     // DELETE /api/posts/{id}
