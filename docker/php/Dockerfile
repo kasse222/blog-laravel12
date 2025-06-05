@@ -19,17 +19,17 @@ RUN apk add --no-cache \
     sqlite \
     sqlite-dev \
     && docker-php-ext-configure gd \
-        --with-freetype \
-        --with-jpeg \
-        --with-webp \
+    --with-freetype \
+    --with-jpeg \
+    --with-webp \
     && docker-php-ext-install -j$(nproc) \
-        pdo_mysql \
-        pdo_sqlite \
-        mbstring \
-        gd \
-        intl \
-        xml \
-        dom \
+    pdo_mysql \
+    pdo_sqlite \
+    mbstring \
+    gd \
+    intl \
+    xml \
+    dom \
     && rm -rf /var/cache/apk/*
 
 # Installer Composer
@@ -49,5 +49,6 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
 # Entry point
 COPY entrypoint.sh /entrypoint.sh
+COPY .env.prod /var/www/html/.env
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
