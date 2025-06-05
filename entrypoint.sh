@@ -9,25 +9,38 @@ until nc -z "$DB_HOST" "$DB_PORT"; do
 done
 echo "✅ MySQL prêt !"
 
-echo "🎛 Configuration de l'application Laravel..."
+cd /var/www/html
 
-# Vérifier que les fichiers clés existent
-if [ -f artisan ]; then
-  php artisan config:clear
-  php artisan cache:clear
-
-  php artisan config:cache
-  php artisan route:cache
-  php artisan view:cache
-
-  # Optionnel : créer les liens symboliques
-  php artisan storage:link || true
-
-  # Droits (optionnel)
-  chown -R www-data:www-data storage bootstrap/cache
-  chmod -R ug+rwX storage bootstrap/cache
-else
-  echo "⚠️ Artisan non trouvé ! Ce n'est peut-être pas un conteneur Laravel complet."
+if [ ! -f artisan ]; then
+  echo "❌ Fichier artisan manquant — arrêt du script."
+  exit 1
 fi
 
+echo "🎛 Configuration de l'application Laravel..."
+
+echo "🧹 Nettoyage config & cache..."
+php artisan config:clear
+php artisan cache:clear
+php artisan route:clear || true
+php artisan view:clear || true
+
+echo "🔁 Génération des caches Laravel..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+echo "📦 Découverte des packages..."
+php artisan package:discover --ansi || true
+
+echo "🔗 Lien symbolique de stockage..."
+php artisan storage:link || true
+
+echo "🔐 Attribution des permissions..."
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R ug+rwX storage bootstrap/cache
+
+echo "🗃️ Exécution des migrations Laravel..."
+php artisan migrate --force || true
+
+echo "🚀 Lancement de php-fpm..."
 exec php-fpm

@@ -38,6 +38,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('posts', PostController::class);
     Route::apiResource('comments', CommentController::class);
     Route::apiResource('tags', TagController::class);
-    
 });
-    
+
+Route::get('/db-check', function () {
+    \Illuminate\Support\Facades\DB::connection()->getPdo();
+    return 'Connexion DB OK';
+});

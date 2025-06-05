@@ -15,12 +15,12 @@ class PostResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-        'id' => $this->id,
-        'title' => $this->title,
-        'content' => $this->content,
-        'tags' => TagResource::collection($this->whenLoaded('tags')),
-        'user' => new UserResource($this->whenLoaded('user')), // si eager loading
-        'created_at' => $this->created_at,  
-    ];
+            'id' => $this->id,
+            'title' => $this->title,
+            'content' => $this->content,
+            'tags' => TagResource::collection($this->whenLoaded('tags')),
+            'user' => new UserResource($this->whenLoaded('user')), // si eager loading
+            'created_at' => $this->created_at,
+        ];
     }
 }

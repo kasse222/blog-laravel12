@@ -71,7 +71,6 @@ class PostController extends Controller
 
 
     // DELETE /api/posts/{id}
-    // DELETE /api/posts/{id}
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
