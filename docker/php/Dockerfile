@@ -22,11 +22,13 @@ COPY . /var/www/html
 COPY .env.prod /var/www/html/.env
 
 # Installer les dépendances sans scripts artisan
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --optimize-autoloader
 
 # Assurer les permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
+RUN mkdir -p /var/www/html/storage/logs && \
+    chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
     chmod -R ug+rwX /var/www/html/storage /var/www/html/bootstrap/cache
+
 
 RUN docker-php-ext-install opcache
 
