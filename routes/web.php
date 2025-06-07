@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +27,6 @@ Route::get('/api/documentation', function () {
     return response($json, 200)->header('Content-Type', 'application/json');
 });
 
-Route::get('/docs', function () {
-    return response()->file(storage_path('api-docs/api-docs.json'));
+Route::get('/swagger', function () {
+    return redirect('/docs/index.html?url=/docs');
 });
