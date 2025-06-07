@@ -10,9 +10,29 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 
+
+/**
+ * @OA\Info(
+ *     version="1.0.0",
+ *     title="API Blog Laravel 12",
+ *     description="Documentation générée automatiquement avec Swagger via L5-Swagger",
+ * )
+ */
 class PostController extends Controller
 {
     // GET /api/posts
+
+    /**
+     * @OA\Get(
+     *     path="/api/posts",
+     *     summary="Liste des posts",
+     *     tags={"Posts"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Succès"
+     *     )
+     * )
+     */
     public function index()
     {
         $posts = Post::with(['user', 'tags'])->latest()->paginate(10);
