@@ -28,7 +28,7 @@ return [
                 /*
                  * File name of the generated json documentation file
                  */
-                'docs_json' => 'api-docs.json',
+                'format_to_use_for_docs' => env('L5_FORMAT_TO_USE_FOR_DOCS', 'json'),
 
                 /*
                  * File name of the generated YAML documentation file
@@ -43,9 +43,13 @@ return [
                 /*
                  * Absolute paths to directory containing the swagger annotations are stored.
                  */
+                'docs' => storage_path('api-docs'),
                 'annotations' => [
                     base_path('app'),
                 ],
+                'views' => base_path('resources/views/vendor/l5-swagger'),
+                'base' => env('L5_SWAGGER_BASE_PATH', null),
+                'excludes' => [],
             ],
         ],
     ],

@@ -11,13 +11,7 @@ use App\Http\Resources\PostResource;
 use App\Models\Post;
 
 
-/**
- * @OA\Info(
- *     version="1.0.0",
- *     title="API Blog Laravel 12",
- *     description="Documentation générée automatiquement avec Swagger via L5-Swagger",
- * )
- */
+
 class PostController extends Controller
 {
     // GET /api/posts

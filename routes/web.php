@@ -19,3 +19,13 @@ Route::get('/', function () {
         'status' => 'OK'
     ]);
 });
+
+
+Route::get('/api/documentation', function () {
+    $json = File::get(storage_path('api-docs/api-docs.json'));
+    return response($json, 200)->header('Content-Type', 'application/json');
+});
+
+Route::get('/docs', function () {
+    return response()->file(storage_path('api-docs/api-docs.json'));
+});

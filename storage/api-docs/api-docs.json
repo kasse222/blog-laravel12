@@ -1,8 +1,11 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "API Blog Laravel 12",
-        "description": "Documentation générée automatiquement avec Swagger via L5-Swagger",
+        "title": "Blog Laravel 12 API",
+        "description": "Documentation de l'API Blog Laravel 12 avec Swagger",
+        "contact": {
+            "email": "contact@exemple.com"
+        },
         "version": "1.0.0"
     },
     "paths": {

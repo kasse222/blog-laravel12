@@ -44,7 +44,3 @@ Route::get('/db-check', function () {
     \Illuminate\Support\Facades\DB::connection()->getPdo();
     return 'Connexion DB OK';
 });
-
-Route::get('/api/documentation', function () {
-    return view('l5-swagger::index');
-});
