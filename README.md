@@ -9,16 +9,25 @@ Ce projet propose la gestion complète d'un blog avec articles, commentaires, ta
 
 ## ✅ Fonctionnalités
 
-* 🔐 Authentification via Laravel Sanctum
-* 📝 Gestion des articles (CRUD)
-* 💬 Gestion des commentaires
-* 🏷️ Système de tags (relation NN)
-* 🧪 Tests automatisés avec PestPHP
-* 🧩 Architecture MVC claire et découplée
-* 🗄️ Base de données **MySQL 8 (via Docker)**
-* 🐋 Déploiement local via **Docker Compose**
+    🔐 Authentification via Laravel Sanctum
 
----
+    📝 Gestion des articles (CRUD)
+
+    💬 Gestion des commentaires
+
+    🏷️ Système de tags (relation NN)
+
+    🧪 Tests automatisés avec PestPHP
+
+    📚 Documentation Swagger générée automatiquement
+
+    🧩 Architecture MVC claire et découplée
+
+    🗄️ Base de données MySQL 8 (via Docker)
+
+    🐋 Déploiement local via Docker Compose
+
+    ⚙️ CI/CD complet avec GitHub Actions
 
 ## 🚀 Installation (Docker)
 
@@ -93,6 +102,17 @@ Tous les tests sont passés ✅
 | Commentaires     | liste, création                       |
 | Tags             | liste, création, édition, suppression |
 
+📚 Documentation Swagger
+    Générée automatiquement avec l5-swagger
+
+    Accès à la documentation :
+    http://localhost:8080/api/documentation (UI)
+    http://localhost:8080/docs (JSON)
+
+Pour régénérer la documentation :
+docker compose -f docker-compose.prod.yml exec app php artisan l5-swagger:generate
+
+
 🐋 Dockérisation complète
 Ce projet est entièrement dockerisé avec :
 
@@ -129,6 +149,18 @@ GitHub Actions (CI/CD)
 
 Postman (débogage API)
 
+⚙️ CI/CD – GitHub Actions
+    Tests automatisés exécutés à chaque push
+
+    Génération et validation du JSON Swagger
+
+    Docker build/test auto via main.yml
+
+    Badge visible dans ce README ✔️
+
+
+
 👨‍💻 Auteur
 Lamine Kasse – Projet personnel de reconversion back-end (Laravel/DevOps)
-🎯 Objectif : intégration professionnelle 🇫🇷 / 🇨🇭
+🎯 Objectif : intégration professionnelle
+```
